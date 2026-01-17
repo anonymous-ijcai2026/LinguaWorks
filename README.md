@@ -1,70 +1,126 @@
 # LinguaWorks
 
-LinguaWorks 是一个面向对话场景的 Prompt 优化系统（前后端分离），用于将「目标 prompt / 需求描述」组织成结构化结果，并在多轮反馈中完成生成与优化。
+**LinguaWorks** is a research-oriented interactive system that supports **skill-oriented prompt construction** for large language models (LLMs).
+It operationalizes the concept of **Prompt Apprenticeship**, a learning-centered framework that scaffolds users in acquiring **transferable prompt construction skills**, rather than merely producing optimized prompts.
 
-系统由三部分组成：
+This repository contains the reference implementation of LinguaWorks used in our IJCAI 2026 submission.
 
-- 后端主服务（FastAPI）：澄清、分析、生成、优化、测试
-- 数据库 API（Flask）：会话、消息、模板、分析方法、用户设置等数据接口
-- 前端（React + Vite）：交互界面、模型配置入口、会话与测试管理
+---
 
-## 特性
+## Overview
 
-- 结构化需求收集与检查（多轮对话与反馈）
-- 元素分析（默认方法 + 自定义方法）
-- Prompt 生成与优化工作流
-- 系统 Prompt 测试与版本对比
-- 模型配置存储在数据库（通过前端 Settings 配置）
+Prompt-based interaction has become a primary mechanism for engaging with LLMs, yet translating high-level intentions into effective prompts remains cognitively demanding.
+Existing prompt-support tools predominantly optimize *prompt outcomes* by automatically generating or refining prompts on behalf of users, often neglecting the development of users’ underlying prompt construction skills.
 
-## 技术栈
+LinguaWorks takes a fundamentally different approach:
 
-- Backend: FastAPI, Flask, SQLAlchemy, MySQL
-- Frontend: React, Vite, TypeScript, Ant Design
+> **Prompt quality is an outcome; prompt construction skill is the goal.**
 
-## 项目结构
+Instead of automating prompt engineering, LinguaWorks structures the prompt construction process as a learning activity, guiding users through iterative reasoning, reflection, and validation.
+
+---
+
+## Prompt Apprenticeship
+
+LinguaWorks is grounded in **Prompt Apprenticeship**, a framework inspired by Cognitive Apprenticeship theory and adapted to human–LLM interaction.
+
+Prompt Apprenticeship emphasizes:
+
+* **Making expert reasoning observable** during prompt construction
+* **Guided practice** through structured refinement and constrained modification
+* **Reflection and validation** to support generalization beyond immediate system use
+
+The framework distinguishes between:
+
+* **In-task prompt quality** (performance while using the system), and
+* **Skill transfer**, measured by users’ ability to construct effective prompts without system assistance.
+
+LinguaWorks is designed explicitly to support both.
+
+---
+
+## System Scope
+
+The current implementation of LinguaWorks focuses on **assistant-style system prompt construction**.
+Such prompts define the role, behavior, constraints, and response style of an LLM-based assistant prior to any user interaction.
+
+Rather than treating system prompts as static artifacts, LinguaWorks supports their construction as an iterative, reflective process.
+
+---
+
+## System Overview
+
+LinguaWorks supports prompt construction through a structured, multi-stage workflow that includes:
+
+* **Requirement clarification** via interactive dialogue
+* **Explicit analysis of prompt elements and constraints**
+* **Guided prompt generation and refinement**
+* **Comparative testing and validation** across prompt versions
+
+Throughout the process, the system maintains explicit representations of user intent, intermediate reasoning, and feedback history to scaffold learning-oriented interaction.
+
+---
+
+## Architecture
+
+LinguaWorks adopts a modular, front–back-end–separated architecture consisting of three main components:
+
+* **Main Backend Service (FastAPI)**
+  Implements the Prompt Apprenticeship workflow, including clarification, analysis, generation, refinement, and testing.
+
+* **Database API Service (Flask)**
+  Provides structured access to persistent data such as sessions, messages, prompt versions, templates, analysis methods, and user configurations.
+
+* **Frontend Client (React + Vite)**
+  Supports interactive prompt construction, model configuration, session management, and prompt testing.
+
+---
+
+## Repository Structure
 
 ```
 .
-├── src/                          # 后端代码
-│   ├── api/                      # FastAPI 主服务 + Flask 数据库 API
-│   ├── core/                     # 处理器（结构检查/生成/优化等）
-│   ├── infrastructure/           # 配置、模型、迁移等基础设施
-│   └── agent_prompt/             # Agent 提示词资源
-├── frontend/                     # 前端项目（Vite）
-├── prompt_optimizer_database.sql # MySQL 初始化脚本
-├── .env                          # 后端环境变量（本地开发）
-├── requirements.txt              # Python 依赖
-├── start_main_app.py             # 启动 FastAPI 主服务
-└── start_database.py             # 启动 Flask 数据库 API
+├── src/                          # Backend source code
+│   ├── api/                      # FastAPI main service & Flask database API
+│   ├── core/                     # Prompt Apprenticeship workflow logic
+│   ├── infrastructure/           # Configuration, models, migrations
+│   └── agent_prompt/             # Agent prompt resources
+├── frontend/                     # Frontend application (Vite + React)
+├── prompt_optimizer_database.sql # MySQL initialization script
+├── requirements.txt              # Python dependencies
+├── start_main_app.py             # FastAPI service entry point
+└── start_database.py             # Database API service entry point
 ```
 
-## 快速开始（本地开发）
+---
 
-### 依赖
+## Quick Start (Local Development)
 
-- Python：建议 3.12
-- Node.js：>=16（见 [package.json](file:///e:/PycharmProjects/LinguaWorks/frontend/package.json)）
-- MySQL：建议 8.x
+### Prerequisites
 
-### 1) 初始化数据库
+* Python ≥ 3.12
+* Node.js ≥ 16
+* MySQL ≥ 8.x
 
-1. 创建数据库（名称需与 `.env` 的 `DB_NAME` 一致，例如 `prompt_optimizer`）
-2. 导入初始化脚本：
+---
+
+### 1. Initialize the Database
+
+Create a MySQL database and import the initialization script:
 
 ```bash
 mysql -u root -p prompt_optimizer < prompt_optimizer_database.sql
 ```
 
-### 2) 配置后端环境变量（根目录 .env）
+---
 
-后端通过 [AppConfig](file:///e:/PycharmProjects/LinguaWorks/src/infrastructure/config/base.py) 读取根目录 `.env`。
+### 2. Backend Configuration
 
-本项目当前实际用到的配置项如下（示例）：
+Create a `.env` file in the project root directory. Example:
 
 ```env
 APP_ENV=development
 DEBUG=true
-LOG_LEVEL=INFO
 
 FASTAPI_HOST=127.0.0.1
 FASTAPI_PORT=8000
@@ -76,23 +132,13 @@ DB_PORT=3306
 DB_NAME=prompt_optimizer
 DB_USER=root
 DB_PASSWORD=root
-DB_CHARSET=utf8mb4
-DB_POOL_SIZE=10
-DB_MAX_OVERFLOW=20
-DB_POOL_TIMEOUT=30
-DB_POOL_RECYCLE=3600
-DB_POOL_NAME=prompt_pool
 
-CORS_ORIGINS=http://localhost:3000,http://127.0.0.1:3000
-
-UPLOAD_PATH=./uploads
-STATIC_PATH=./static
-LOG_FILE_PATH=./logs/app.log
+CORS_ORIGINS=http://localhost:3000
 ```
 
-### 3) 安装并启动后端
+---
 
-在项目根目录创建并激活虚拟环境后：
+### 3. Start Backend Services
 
 ```bash
 pip install -r requirements.txt
@@ -100,79 +146,76 @@ python start_database.py
 python start_main_app.py
 ```
 
-默认地址：
+* FastAPI API docs: [http://localhost:8000/docs](http://localhost:8000/docs)
+* Database API: [http://localhost:5001/api](http://localhost:5001/api)
 
-- FastAPI 文档：`http://localhost:8000/docs`
-- 数据库 API：`http://localhost:5001/api`
+---
 
-### 4) 配置前端环境变量（Vite）
+### 4. Frontend Configuration & Startup
 
-前端通过 Vite 环境变量配置后端地址（可在 `frontend/.env.local` 或命令行环境变量设置）：
-
-- `VITE_API_BASE_URL`：FastAPI 主服务基址（默认 `http://localhost:8000`）
-- `VITE_DB_API_BASE_URL`：数据库 API 基址（默认 `http://localhost:5001/api`）
-
-示例：
+Create `frontend/.env.local`:
 
 ```env
 VITE_API_BASE_URL=http://localhost:8000
 VITE_DB_API_BASE_URL=http://localhost:5001/api
 ```
 
-对应实现：
-
-- 主服务地址读取：[api.ts](file:///e:/PycharmProjects/LinguaWorks/frontend/src/services/api.ts)
-- 数据库 API 地址读取：[databaseService.ts](file:///e:/PycharmProjects/LinguaWorks/frontend/src/services/databaseService.ts)
-
-### 5) 安装并启动前端
-
-在 `frontend/` 目录：
+Then run:
 
 ```bash
+cd frontend
 npm install
 npm run dev
 ```
 
-打开：`http://localhost:3000`
+Open [http://localhost:3000](http://localhost:3000)
 
-## 配置自检
+---
 
-后端提供配置验证命令（检查 `.env`、数据库 URL 构建、目录创建、端口冲突等）：
+## Configuration Validation
+
+LinguaWorks includes a configuration validation utility that checks environment variables, database connectivity, and runtime setup:
 
 ```bash
 python -m src.infrastructure.config.validation
 ```
 
-实现见 [validation.py](file:///e:/PycharmProjects/LinguaWorks/src/infrastructure/config/validation.py)。
+---
 
-## 主要模块
+## Development & Testing
 
-- FastAPI 主服务入口：[app.py](file:///e:/PycharmProjects/LinguaWorks/src/api/app.py)
-- 工作流接口：[workflow.py](file:///e:/PycharmProjects/LinguaWorks/src/api/routers/workflow.py)
-- 元信息接口（agent mapping / reload ai config 等）：[meta.py](file:///e:/PycharmProjects/LinguaWorks/src/api/routers/meta.py)
-- 数据库 API：[database_api.py](file:///e:/PycharmProjects/LinguaWorks/src/api/database_api.py)
-
-## 开发
-
-### 后端
+### Backend
 
 ```bash
 python -m pytest
 python -m black --check src tests start_database.py start_main_app.py
 ```
 
-### 前端
-
-在 `frontend/` 目录：
+### Frontend
 
 ```bash
 npm run lint
 npm run type-check
 ```
 
-## 常见问题
+---
 
-- 无法连接数据库：确认 MySQL 运行中、`.env` 的 `DB_*` 正确、已导入 SQL 初始化脚本
-- 跨域错误：确认 `CORS_ORIGINS` 包含前端访问地址，且 FastAPI 正在运行
-- 前端请求地址不对：检查 `VITE_API_BASE_URL / VITE_DB_API_BASE_URL` 是否正确
+## Relation to the Paper
 
+This repository contains the reference implementation of **LinguaWorks**, as described in our IJCAI 2026 submission:
+
+> **LinguaWorks: Supporting Skill-Oriented Prompt Construction via Prompt Apprenticeship**
+
+The system is provided to support transparency, reproducibility, and future research on learning-centered LLM interaction.
+
+---
+
+## Citation
+
+If you use LinguaWorks or build upon this work, please cite our paper (to appear).
+
+---
+
+## License
+
+This project is released for research and academic use.
