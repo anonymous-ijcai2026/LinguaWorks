@@ -198,7 +198,29 @@ npm run type-check
 
 ---
 ## Examples
+### 1.🎨 Idea Incubator
+![1.1](pic/1.1.png)
+![1.2](pic/1.2.png)
+![1.3](pic/1.3.png)
+![1.4](pic/1.4.png)
 
+### 2.🔍 Insight Decoder
+![2.1](pic/2.1.png)
+![2.2](pic/2.2.png)
+
+### 3.⚒️ Prompt Crafter
+![3.1](pic/3.1.png)
+![3.2](pic/3.2.png)
+
+### 4.✨ Refinement Hub
+![4.1](pic/4.1.png)
+![4.2](pic/4.2.png)
+
+### 5.🧪 Validation Chamber
+![5.1](pic/5.1.png)
+![5.2](pic/5.2.png)
+![5.3](pic/5.3.png)
+![5.4](pic/5.4.png)
 
 ## License
 
