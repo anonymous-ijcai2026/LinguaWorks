@@ -3,8 +3,6 @@
 **LinguaWorks** is a research-oriented interactive system that supports **skill-oriented prompt construction** for large language models (LLMs).
 It operationalizes the concept of **Prompt Apprenticeship**, a learning-centered framework that scaffolds users in acquiring **transferable prompt construction skills**, rather than merely producing optimized prompts.
 
-This repository contains the reference implementation of LinguaWorks used in our IJCAI 2026 submission.
-
 ---
 
 ## Overview
@@ -197,24 +195,6 @@ python -m black --check src tests start_database.py start_main_app.py
 npm run lint
 npm run type-check
 ```
-
----
-
-## Relation to the Paper
-
-This repository contains the reference implementation of **LinguaWorks**, as described in our IJCAI 2026 submission:
-
-> **LinguaWorks: Supporting Skill-Oriented Prompt Construction via Prompt Apprenticeship**
-
-The system is provided to support transparency, reproducibility, and future research on learning-centered LLM interaction.
-
----
-
-## Citation
-
-If you use LinguaWorks or build upon this work, please cite our paper (to appear).
-
----
 
 ## License
 
